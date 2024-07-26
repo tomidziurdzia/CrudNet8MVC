@@ -82,6 +82,30 @@ public class IndexController : Controller
         
         return View(contact);
     }
+    
+    [HttpGet]
+    public IActionResult Delete(int? id)
+    {
+        if (id == null) return NotFound();
+
+        var contact = _context.Contact.Find(id);
+        if (contact == null) return NotFound();
+        
+        return View(contact);
+    }
+    
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteContact(int? id)
+    {
+        var contact = await _context.Contact.FindAsync(id);
+        if (contact == null) return View();
+        
+        // Borrar
+        _context.Contact.Remove(contact);
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
 
     public IActionResult Privacy()
     {
