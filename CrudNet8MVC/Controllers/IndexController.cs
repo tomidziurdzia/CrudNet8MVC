@@ -69,6 +69,19 @@ public class IndexController : Controller
         }
         return View();
     }
+    
+    
+    // Es la vista de la pagina para crear usuario, por eso es GET
+    [HttpGet]
+    public IActionResult Detail(int? id)
+    {
+        if (id == null) return NotFound();
+
+        var contact = _context.Contact.Find(id);
+        if (contact == null) return NotFound();
+        
+        return View(contact);
+    }
 
     public IActionResult Privacy()
     {
