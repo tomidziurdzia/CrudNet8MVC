@@ -43,6 +43,32 @@ public class IndexController : Controller
         }
         return View();
     }
+    
+    // Es la vista de la pagina para crear usuario, por eso es GET
+    [HttpGet]
+    public IActionResult Edit(int? id)
+    {
+        if (id == null) return NotFound();
+
+        var contact = _context.Contact.Find(id);
+        if (contact == null) return NotFound();
+        
+        return View(contact);
+    }
+    
+    // Es el formulario para editar el usuario
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(Contact contact)
+    {
+        if (ModelState.IsValid)
+        {
+            _context.Update(contact);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+        return View();
+    }
 
     public IActionResult Privacy()
     {
