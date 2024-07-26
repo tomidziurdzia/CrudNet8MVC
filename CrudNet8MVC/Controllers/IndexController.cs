@@ -1,20 +1,22 @@
 using System.Diagnostics;
+using CrudNet8MVC.Data;
 using Microsoft.AspNetCore.Mvc;
 using CrudNet8MVC.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CrudNet8MVC.Controllers;
 
-public class HomeController : Controller
+public class IndexController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
-    public HomeController(ILogger<HomeController> logger)
+    private readonly ApplicationDbContext _context;
+    public IndexController(ApplicationDbContext context)
     {
-        _logger = logger;
+        _context = context;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View();
+        return View(await _context.Contact.ToListAsync());
     }
 
     public IActionResult Privacy()
