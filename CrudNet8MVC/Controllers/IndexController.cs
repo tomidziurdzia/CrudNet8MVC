@@ -14,9 +14,34 @@ public class IndexController : Controller
         _context = context;
     }
 
+    [HttpGet]
     public async Task<IActionResult> Index()
     {
         return View(await _context.Contact.ToListAsync());
+    }
+
+    // Es la vista de la pagina para crear usuario, por eso es GET
+    [HttpGet]
+    public IActionResult Create()
+    {
+        return View();
+    }
+    
+    // Es el formulario para crear el usuario
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(Contact contact)
+    {
+        if (ModelState.IsValid)
+        {
+            // Agregar fecha
+            contact.FechaCreacion = DateTime.Now;
+            
+            _context.Contact.Add(contact);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+        return View();
     }
 
     public IActionResult Privacy()
